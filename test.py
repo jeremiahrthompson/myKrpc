@@ -5,5 +5,7 @@ import circularize
 import deorbit
 
 conn = server.Connect().conn
-deorbit = deorbit.Deorbit(conn)
-deorbit.deorbit()
+# deorbit = deorbit.Deorbit(conn)
+# deorbit.deorbit()
+launch = launch.Launch(conn)
+launch.autostage()
