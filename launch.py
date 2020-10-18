@@ -79,7 +79,7 @@ class Launch:
         while self.flight.speed < 100:
             self.set_pitch_heading(90, heading)
             self.vessel_control.autostage()
-            self.vessel_control.adjust_throttle_twr(1.3)
+            self.vessel_control.adjust_throttle_twr(1.7)
 
     def pitch_maneuver(self, heading):
         print("Pitch Maneuver")

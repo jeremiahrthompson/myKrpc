@@ -112,11 +112,11 @@ class VesselControl:
         for part in self.get_decouple_stage_parts():
             # if the part can hold resource and the resource amount is 0 decouple the stage
             if (part.resources.has_resource("LiquidFuel")) and (part.resources.amount("LiquidFuel") == 0):
-                print("    Activating Stage")
                 self.activate_next_stage()
+                break
             elif (part.resources.has_resource("Oxidizer")) and (part.resources.amount("Oxidizer") == 0):
-                print("    Activating Stage")
                 self.activate_next_stage()
+                break
 
     # disengages autopilot then sets SAS to orbital prograde, if prograde not available with alt to stability assist.
     def set_sas_orbital_prograde(self):
