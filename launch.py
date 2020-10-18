@@ -1,6 +1,5 @@
 import time
 import circularize
-from operator import attrgetter
 
 
 class Launch:
@@ -36,17 +35,8 @@ class Launch:
             print("Launch Sequence")
             #set initial autopilot to the input heading and 90 pitch
             self.set_pitch_heading(90, heading)
-            launch_call = "T - "
-            for x in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
-                print(launch_call + str(x))
-                if x == 2:
-                    # begin engine start up
-                    self.vessel.control.throttle = .2
-                    self.activate_next_stage()
-                if x == 1:
-                    # throttle to full
-                    self.vessel.control.throttle = 1
-                time.sleep(1)
+            # begin countdown and engine warmup
+            self.countdown()
             # don't release launch clamps until twr is greater than 1.1
             while self.thrust_weight() < 1.1:
                 pass
@@ -59,6 +49,20 @@ class Launch:
             return True
         else:
             return False
+
+    # begin countdown from 10 down to 1.
+    def countdown(self)
+        launch_call = "T - "
+        for x in [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]:
+            print(launch_call + str(x))
+            if x == 2:
+                # begin engine start up
+                self.vessel.control.throttle = .2
+                self.activate_next_stage()
+            if x == 1:
+                # throttle to full
+                self.vessel.control.throttle = 1
+            time.sleep(1)
 
     def ascend(self, target_orbit_alt, heading):
         print("    Ascending To:")
