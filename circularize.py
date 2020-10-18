@@ -1,24 +1,27 @@
 import time
 import math
+import vessel_control
 
 
 class Circularize:
 
+    # runs on class initialization, is passed connection from call.
     def __init__(self, this_conn):
         self.conn = this_conn
+        self.vessel_control = vessel_control.VesselControl(this_conn)
         self.vessel = this_conn.space_center.active_vessel
-        self.refframe = self.vessel.orbit.body.reference_frame
-        self.flight = self.vessel.flight(self.refframe)
+        self.ref_frame = self.vessel.orbit.body.reference_frame
+        self.flight = self.vessel.flight(self.ref_frame)
         self.ut = this_conn.add_stream(getattr, this_conn.space_center, 'ut')
 
-    def circularize(self):
+    def start(self):
         print("Circularize")
         calc_burn = self.calc_burn()
         burn_time = calc_burn[0]
         delta_v = calc_burn[1]
         node = self.time_warp(burn_time, delta_v)
         self.burn(burn_time, node)
-        self.set_sas_orbital_prograde()
+        self.vessel_control.set_sas_orbital_prograde()
 
     def calc_burn(self):
         self.vessel = self.conn.space_center.active_vessel
@@ -32,9 +35,6 @@ class Circularize:
         f = self.vessel.available_thrust
         isp = self.vessel.specific_impulse * 9.82
         m0 = self.vessel.mass
-        print(isp)
-        print(m0)
-        print(delta_v)
         m1 = m0 / math.exp(delta_v / isp)
         flow_rate = f / isp
         burn_time = (m0 - m1) / flow_rate
@@ -44,7 +44,7 @@ class Circularize:
     def time_warp(self, burn_time, delta_v):
         node = self.vessel.control.add_node(
             self.ut() + self.vessel.orbit.time_to_apoapsis, prograde=delta_v)
-        self.engage_autopilot()
+        self.vessel_control.engage_autopilot()
         self.vessel.auto_pilot.reference_frame = node.reference_frame
         self.vessel.auto_pilot.target_direction = (0, 1, 0)
         self.vessel.auto_pilot.wait()
@@ -67,27 +67,3 @@ class Circularize:
             pass
         self.vessel.control.throttle = 0.0
         node.remove()
-
-    def set_sas_orbital_prograde(self):
-        self.vessel.auto_pilot.disengage()
-        self.vessel.control.sas = True
-        try:
-            self.vessel.control.speed_mode = self.vessel.control.speed_mode.orbit
-        except RuntimeError:
-            print('    Could not set Speed Mode - orbit')
-            pass
-        try:
-            self.vessel.control.sas_mode = self.vessel.control.sas_mode.prograde
-        except RuntimeError:
-            print('    Could not set SAS Mode - prograde')
-            self.vessel.control.sas_mode = self.vessel.control.sas_mode.stability_assist
-            print('    Setting SAS Mode to - stability_assist')
-            pass
-
-    def engage_autopilot(self):
-        try:
-            self.vessel.auto_pilot.pitch_error
-        except RuntimeError:
-            print("    Engaging AutoPilot")
-            self.vessel.auto_pilot.engage()
-            pass
