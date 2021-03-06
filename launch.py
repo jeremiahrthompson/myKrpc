@@ -23,7 +23,7 @@ class Launch:
 
     # controls vessel during launch sequence and hands off after vessel speed is greater than 10m/s.
     def liftoff(self, heading):
-        # start launch sequence if vessel altidude is below 100m
+        # start launch sequence if vessel altitude is below 100m
         if self.altitude() < 100:
             print("Launch Sequence")
             # set initial autopilot to the input heading and 90 pitch
@@ -57,7 +57,7 @@ class Launch:
                 self.vessel.control.throttle = 1
             time.sleep(1)
 
-    # methond that syncronizes ascent phases
+    # method that synchronizes ascent phases
     def ascend(self, target_orbit_alt, heading):
         print("    Ascending To:")
         print("    Heading = " + str(heading))
