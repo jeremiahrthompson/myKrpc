@@ -1,5 +1,6 @@
 import launch
 import circularize
+import science
 
 
 class UserInterface:
@@ -9,6 +10,7 @@ class UserInterface:
         self.conn = this_conn
         self.launch = launch.Launch(this_conn)
         self.circ = circularize.Circularize(this_conn)
+        self.science = science.Science(this_conn)
         self.vessel = this_conn.space_center.active_vessel
         self.ref_frame = self.vessel.orbit.body.reference_frame
         self.flight = self.vessel.flight(self.ref_frame)
@@ -23,6 +25,9 @@ class UserInterface:
         self.circ_button = self.panel.add_button('Circularize')
         self.circ_button_clicked = this_conn.add_stream(getattr, self.circ_button, 'clicked')
         self.circ_button_size = (80, 20)
+        self.science_button = self.panel.add_button('Science')
+        self.science_button_clicked = this_conn.add_stream(getattr, self.science_button, 'clicked')
+        self.science_button_size = (60, 20)
 
     def start(self):
         self.build_panel()
@@ -33,6 +38,9 @@ class UserInterface:
             if self.circ_button_clicked():
                 self.circ_button.clicked = False
                 self.circ.start()
+            if self.science_button_clicked():
+                self.science_button.clicked = False
+                self.science.start()
 
     def build_panel(self):
         rect = self.panel.rect_transform
@@ -42,6 +50,8 @@ class UserInterface:
         self.launch_button.rect_transform.position = self.rect_position(self.launch_button_size, (3, 3))
         self.circ_button.rect_transform.size = self.circ_button_size
         self.circ_button.rect_transform.position = self.rect_position(self.circ_button_size, (66, 3))
+        self.science_button.rect_transform.size = self.science_button_size
+        self.science_button.rect_transform.position = self.rect_position(self.science_button_size, (3, 26))
 
     def rect_position(self, size, position):
         return (int(position[0] - (self.rect_size[0] / 2) + (size[0] / 2))), (int((self.rect_size[1] / 2) -
