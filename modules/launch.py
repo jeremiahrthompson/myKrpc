@@ -1,5 +1,5 @@
 import time
-import vessel_control
+from modules.old_modules import vessel_control
 
 
 class Launch:
@@ -33,7 +33,8 @@ class Launch:
             # don't release launch clamps until twr is greater than 1.1
             while self.vessel_control.thrust_weight() < 1.1:
                 pass
-            self.vessel_control.activate_next_stage()
+            # code that checks for launch clamps in stage and releases launch clamps
+            # self.vessel_control.activate_next_stage()
             while self.flight.speed < 10:
                 pass
             print("****    LIFTOFF    ****")

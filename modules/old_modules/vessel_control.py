@@ -1,8 +1,14 @@
 class VesselControl:
     def __init__(self, this_conn):
         self.conn = this_conn
-        self.vessel = this_conn.space_center.active_vessel
+        self.vessel = self.get_active_vessel()
         self.altitude = this_conn.add_stream(getattr, self.vessel.flight(), 'surface_altitude')
+
+    def get_refframe(self):
+        return self.vessel.orbit.body.reference_frame
+
+    def get_active_vessel(self):
+        return self.conn.space_center.active_vessel
 
     # reestablishing active vessel, reference frames and streams (primarily used after decoupling)
     def reestablish(self):
@@ -71,6 +77,7 @@ class VesselControl:
     def jettison_fairing(self):
         # check to see if vessel altitude is above 60000m
         if self.altitude() > 60000:
+            print("    Jettisoning Fairings - above 60000m")
             # set jettison to true.
             jettison = True
             # loop through all parts decoupled in next stage
@@ -113,9 +120,11 @@ class VesselControl:
             # if the part can hold resource and the resource amount is 0 decouple the stage
             if (part.resources.has_resource("LiquidFuel")) and (part.resources.amount("LiquidFuel") == 0):
                 self.activate_next_stage()
+                print("    Decoupling Fuel Tank - Liquid Fuel Depleted")
                 break
             elif (part.resources.has_resource("Oxidizer")) and (part.resources.amount("Oxidizer") == 0):
                 self.activate_next_stage()
+                print("    Decoupling Fuel Tank - Oxidizer Depleted")
                 break
 
     # disengages autopilot then sets SAS to orbital prograde, if prograde not available with alt to stability assist.

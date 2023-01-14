@@ -12,8 +12,6 @@ class Science:
         self.transmit_module = self.get_science_transmit_module()
         self.data_module = self.get_science_data_module()
         self.container_module = self.get_science_container_module()
-        self.refframe = self.vessel.orbit.body.reference_frame
-        self.flight = self.vessel.flight(self.refframe)
 
     def start(self):
         if float(self.data_module.get_field('Science')[:-4]) < 499:
@@ -46,18 +44,28 @@ class Science:
         for part in self.vessel.parts.all:
             if part.name == 'Large.Crewed.Lab':
                 return part
+        return None
 
     def get_science_transmit_module(self):
-        for module in self.part.modules:
-            if module.name == 'ModuleScienceLab':
-                return module
+        if self.part is not None:
+            if self.part.modules is not None:
+                for module in self.part.modules:
+                    if module.name == 'ModuleScienceLab':
+                        return module
+        return None
 
     def get_science_data_module(self):
-        for module in self.part.modules:
-            if module.name == 'ModuleScienceConverter':
-                return module
+        if self.part is not None:
+            if self.part.modules is not None:
+                for module in self.part.modules:
+                    if module.name == 'ModuleScienceConverter':
+                        return module
+        return None
 
     def get_science_container_module(self):
-        for module in self.part.modules:
-            if module.name == 'ModuleScienceContainer':
-                return module
+        if self.part is not None:
+            if self.part.modules is not None:
+                for module in self.part.modules:
+                    if module.name == 'ModuleScienceContainer':
+                        return module
+        return None
