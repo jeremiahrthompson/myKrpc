@@ -1,5 +1,5 @@
-import ui
-import server
+from modules import ui
+from modules import server
 
 
 conn = server.Connect().conn

@@ -12,11 +12,11 @@ class VesselControl:
 
     # reestablishing active vessel, reference frames and streams (primarily used after decoupling)
     def reestablish(self):
-        self.vessel = self.conn.space_center.active_vessel
-        self.refframe = self.vessel.orbit.body.reference_frame
-        self.flight = self.vessel.flight(self.refframe)
-        self.apoapsis = self.conn.add_stream(getattr, self.vessel.orbit, 'apoapsis_altitude')
-        self.altitude = self.conn.add_stream(getattr, self.vessel.flight(), 'surface_altitude')
+        self.vessel = self.get_active_vessel()
+        # self.refframe = self.vessel.orbit.body.reference_frame
+        # self.flight = self.vessel.flight(self.refframe)
+        # self.apoapsis = self.conn.add_stream(getattr, self.vessel.orbit, 'apoapsis_altitude')
+        # self.altitude = self.conn.add_stream(getattr, self.vessel.flight(), 'surface_altitude')
 
     # adjusts throttle based on max q
     def adjust_throttle_max_q(self):

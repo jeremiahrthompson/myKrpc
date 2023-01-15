@@ -1,0 +1,5 @@
+name: "elon"
+version: 1
+go: True
+apoapsis: 100000
+heading: 90
