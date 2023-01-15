@@ -146,10 +146,9 @@ class VesselControl:
 
     # checks to see if autopilot is active by checking for pitch error.  if this throws exception autopilot needs
     # activated.
-    def engage_autopilot(self):
+    def engage_autopilot_if_not_engaged(self):
         try:
             self.vessel.auto_pilot.pitch_error
         except RuntimeError:
-            print("    Engaging AutoPilot")
             self.vessel.auto_pilot.engage()
             pass

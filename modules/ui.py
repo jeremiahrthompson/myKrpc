@@ -72,6 +72,7 @@ class UserInterface:
             if self.launch:
                 if launch_button_clicked():
                     launch_button.clicked = False
+                    launch_button.visible = False
                     launch_module = launch.Launch(self.conn, self.active_vessel_params)
                     launch_module.start()
             time.sleep(0.01)
